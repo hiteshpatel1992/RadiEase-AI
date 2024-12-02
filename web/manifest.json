@@ -1,0 +1,19 @@
+
+{
+    "name": "git init AI",
+    "description": "",
+    "version": "1.0.1",
+    "permissions": [
+        "activeTab", "tabs", "storage"
+    ],
+    "host_permissions": ["<all_urls>"],
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": "icons/Icon-192.png"
+    },
+    "manifest_version": 3,
+    "content_security_policy": {
+        "script-src": ["'self'"],
+        "object-src": ["'self'"]
+    }
+}
