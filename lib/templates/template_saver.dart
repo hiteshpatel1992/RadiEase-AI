@@ -55,7 +55,7 @@ class _TemplateScreen extends State<TemplateScreen> {
         centerTitle: true,
         title: Text(
           "Templates",
-          style: GoogleFonts.mulish(fontSize: 20),
+          style: GoogleFonts.mulish(fontSize: 18),
         ),
       ),
       backgroundColor: Colors.white,
@@ -77,6 +77,7 @@ class _TemplateScreen extends State<TemplateScreen> {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Container(
+                            margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
@@ -141,7 +142,9 @@ class _TemplateScreen extends State<TemplateScreen> {
                         Text(
                           "No Templates Yet!",
                           style: GoogleFonts.mulish(
-                              fontSize: 18, fontWeight: FontWeight.w700),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey),
                         ),
                         const SizedBox(
                           height: 24,

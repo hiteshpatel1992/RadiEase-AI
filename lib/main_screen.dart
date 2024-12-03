@@ -17,7 +17,6 @@ import 'package:sound_library/sound_library.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:html/dom.dart' as dom;
-import 'package:window_manager/window_manager.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -27,7 +26,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool isGemini = false;
+  bool isGemini = true;
   Deepgram? deepgram;
   final TextEditingController _controller = TextEditingController();
   DeepgramLiveTranscriber? transcriber;
@@ -77,11 +76,8 @@ class _MainScreenState extends State<MainScreen> {
   void requestMicrophonePermission() async {
     PermissionStatus status = await Permission.microphone.request();
     if (status.isGranted) {
-      print("Microphone permission granted");
     } else if (status.isDenied) {
-      print("Microphone permission denied");
     } else if (status.isPermanentlyDenied) {
-      print("Microphone permission permanently denied");
       // You can show a dialog or redirect the user to the app settings
     }
   }
@@ -101,7 +97,6 @@ class _MainScreenState extends State<MainScreen> {
     };
     deepgram = Deepgram(apiKey, baseQueryParams: params);
     final isValid = await deepgram!.isApiKeyValid();
-    print('API key is valid: $isValid');
 
     Future.delayed(const Duration(seconds: 1), () {
       isAudioStart = true;
@@ -164,7 +159,6 @@ class _MainScreenState extends State<MainScreen> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            print("reset");
                             _stopListening();
                             chatGpt = "";
                             isAudioStart = false;
@@ -181,8 +175,6 @@ class _MainScreenState extends State<MainScreen> {
                         const Spacer(),
                         IconButton(
                           onPressed: () async {
-                            await windowManager.setSize(const Size(700, 500));
-                            await windowManager.center();
                             final clipboard = ClipboardWriter.instance;
                             final item = DataWriterItem();
                             item.add(Formats.htmlText(chatGpt));
@@ -320,23 +312,23 @@ class _MainScreenState extends State<MainScreen> {
                                   color: Colors.transparent,
                                   width: 1.0), // Border when focused
                             ),
-                            labelText: 'Type or speak.....',
+                            labelText: 'Type or Speak!',
                             labelStyle: GoogleFonts.mulish(
                                 fontSize: 22, color: Colors.grey)),
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: Row(
                       children: [
-                        Container(
+                        SizedBox(
                           height: 50,
-                          width: 160,
+                          width: 180,
                           child: DropdownSearch<String>(
                             suffixProps: DropdownSuffixProps(
                               dropdownButtonProps: DropdownButtonProps(
-                                iconClosed: Container(
+                                iconClosed: SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: SvgPicture.asset(
@@ -345,34 +337,51 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                               ),
                             ),
-                            decoratorProps: const DropDownDecoratorProps(
+                            decoratorProps: DropDownDecoratorProps(
                               decoration: InputDecoration(
-                                labelText: "Select Template",
-                                enabledBorder: OutlineInputBorder(
+                                labelText: "Templates",
+                                labelStyle: GoogleFonts.mulish(
+                                  fontSize: 14,
+                                ),
+                                enabledBorder: const OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8.0)),
                                   borderSide: BorderSide(
                                       color: Color.fromARGB(255, 215, 215, 215),
                                       width: 1.0), // Focused border color
                                 ),
-                                border: OutlineInputBorder(
+                                border: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.blue,
                                       width: 2.0), // Border color
                                 ),
-                                focusedBorder: OutlineInputBorder(
+                                focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.green,
                                       width: 2.0), // Focused border color
                                 ),
                               ),
                             ),
-                            popupProps: const PopupProps.menu(
+                            popupProps: PopupProps.menu(
+                              itemBuilder:
+                                  (context, item, isDisabled, isSelected) {
+                                return ListTile(
+                                  title: Text(
+                                    item,
+                                    style: GoogleFonts.mulish(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                );
+                              },
                               showSearchBox: true, // Enables the search box
                               searchFieldProps: TextFieldProps(
                                 decoration: InputDecoration(
-                                  hintText: "Search template",
-                                  border: OutlineInputBorder(),
+                                  hintText: "Search Template",
+                                  hintStyle: GoogleFonts.mulish(
+                                    fontSize: 14,
+                                  ),
+                                  border: const OutlineInputBorder(),
                                 ),
                               ),
                             ),
@@ -383,7 +392,7 @@ class _MainScreenState extends State<MainScreen> {
                             },
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Align(
                           alignment: Alignment.centerRight,
                           child: CircleAvatar(
@@ -457,10 +466,9 @@ class _MainScreenState extends State<MainScreen> {
       EasyLoading.show(status: 'loading...');
       Gemini.instance.promptStream(model: "gemini-1.5-pro", parts: [
         Part.text(
-            'Output in html format only Fill in the attached report template with $_lastWords findings and also generate conclusion and recommendations; maintain the architecture/formatting pattern of template:$template'),
+            // 'fill the template and not to change template Output in html format only : $_lastWords  Template:$template'
+            'Output in html format only Fill in the attached report template with $_lastWords findings; maintain the architecture/formatting pattern of template:$template'),
       ]).listen((value) {
-        print(value?.output);
-
         chatGpt = "$chatGpt ${value!.output!}";
         String modifiedString = chatGpt.replaceAll("```html", "");
         String modifiedString2 = modifiedString.replaceAll("```", "");
@@ -521,19 +529,20 @@ class _MainScreenState extends State<MainScreen> {
         case 'strong':
           return TextSpan(
               text: element.text,
-              style: TextStyle(fontWeight: FontWeight.bold));
+              style: const TextStyle(fontWeight: FontWeight.bold));
         case 'em':
           return TextSpan(
               text: element.text,
-              style: TextStyle(fontStyle: FontStyle.italic));
+              style: const TextStyle(fontStyle: FontStyle.italic));
         case 'h1':
           return TextSpan(
               text: element.text,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
         default:
           return TextSpan(text: element.text);
       }
     }
-    return TextSpan();
+    return const TextSpan();
   }
 }

@@ -22,8 +22,9 @@ class _AddTemplateScreen extends State<AddTemplateScreen> {
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           "Add Templates",
+          style: GoogleFonts.mulish(fontSize: 18),
         ),
       ),
       backgroundColor: Colors.white,
@@ -37,7 +38,7 @@ class _AddTemplateScreen extends State<AddTemplateScreen> {
               "Template Name",
               style: GoogleFonts.mulish(
                   fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   color: Colors.black),
             ),
             const SizedBox(
@@ -79,7 +80,7 @@ class _AddTemplateScreen extends State<AddTemplateScreen> {
               "Paste Template",
               style: GoogleFonts.mulish(
                   fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   color: Colors.black),
             ),
             SizedBox(
@@ -108,7 +109,7 @@ class _AddTemplateScreen extends State<AddTemplateScreen> {
                           color: Color.fromARGB(255, 215, 215, 215),
                           width: 1.0), // Border when focused
                     ),
-                    labelText: 'Paste template here.....',
+                    labelText: 'Paste template here',
                     alignLabelWithHint: true,
                     labelStyle: GoogleFonts.mulish(
                         fontSize: 15,
