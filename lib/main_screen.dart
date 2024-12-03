@@ -66,7 +66,12 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> dropDown() async {
     templateList = [];
     templateName = [];
-    templateList = jsonDecode(getFromLocalStorage("templates")!);
+
+    try {
+      templateList = jsonDecode(getFromLocalStorage("templates")!);
+    } catch (ex) {
+      templateList = [];
+    }
 
     if (templateList.length == 0) {
       String TemplateText =
