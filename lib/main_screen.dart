@@ -67,6 +67,27 @@ class _MainScreenState extends State<MainScreen> {
     templateList = [];
     templateName = [];
     templateList = jsonDecode(getFromLocalStorage("templates")!);
+
+    if (templateList.length == 0) {
+      String TemplateText =
+          '''TECHNIQUE: Axial CT scan of the brain has been performed using 5 mm contiguous slices on Advanced 40/80 slice CT, without contrast. Additional sagittal and coronal reconstructions were done.
+CLINICAL PROFILE:  COMPARISON: None.
+FINDINGS:
+Acute abnormalities: No obvious infarct or intra / extra-axial haemorrhage is seen. No focal lesion is seen. No midline shift or herniation is seen. 
+Cerebral, cerebellar and brainstem parenchyma: The brain parenchyma, brainstem, and cerebellar hemispheres appear normal.
+Extra axial spaces: Ventricular system and basal cisterns appear normal. 
+Vascular system: Dural venous sinuses appear unremarkable. 
+Calvarium: The calvarium and skull base appears normal. No fracture or any focal lesion.
+Visualised paranasal sinuses: Clear.
+Mastoids: Clear.
+IMPRESSION:
+No significant intracranial abnormality is seen on the CT head plain study. 
+Suggest: Clinical correlation, further evaluation / follow up imaging.''';
+      String templateName = "CT HEAD PLAIN STUDY";
+      List<Map<String, dynamic>> ListData = [];
+      ListData.add({"name": templateName, "template": TemplateText});
+      saveToLocalStorage("templates", jsonEncode(ListData));
+    }
     for (int i = 0; i < templateList.length; i++) {
       templateName.add(templateList[i]["name"]);
     }
